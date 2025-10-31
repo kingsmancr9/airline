@@ -1,0 +1,20 @@
+
+/* Placeholder bootstrap-icons.css */
+@font-face {
+  font-family: 'bootstrap-icons';
+  src: url('../fonts/bootstrap-icons.woff2') format('woff2'),
+       url('../fonts/bootstrap-icons.woff') format('woff');
+}
+.bi {
+  font-family: 'bootstrap-icons' !important;
+  font-style: normal;
+  font-weight: normal;
+  speak: never;
+  display: inline-block;
+  text-decoration: inherit;
+  vertical-align: -0.125em;
+  text-align: center;
+}
+.bi-star-fill::before { content: "\f586"; }
+.bi-bell::before { content: "\f0f3"; }
+.bi-house-door::before { content: "\f015"; }

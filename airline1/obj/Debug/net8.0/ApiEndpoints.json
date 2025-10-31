@@ -1,0 +1,76 @@
+[
+  {
+    "ContainingType": "airline1.Controllers.BookingApiController",
+    "Method": "Post",
+    "RelativePath": "api/BookingApi",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "booking",
+        "Type": "airline1.Models.Booking",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "airline1.Controllers.BookingController",
+    "Method": "CreateBooking",
+    "RelativePath": "Booking/CreateBooking",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "booking",
+        "Type": "airline1.Models.Booking",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "airline1.Controllers.BookingController",
+    "Method": "GetAllBookings",
+    "RelativePath": "Booking/GetAllBookings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "airline1.Controllers.BookingController",
+    "Method": "GetBookingDetails",
+    "RelativePath": "Booking/GetBookingDetails/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "airline1.Controllers.BookingController",
+    "Method": "ProcessPayment",
+    "RelativePath": "Booking/ProcessPayment",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "payment",
+        "Type": "airline1.Models.Payment",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

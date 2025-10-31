@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Badr Airlines</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a285f 0%, #4e73df 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            background: white;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        .payment-method {
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: #4e73df;
+        }
+
+        .payment-method.selected {
+            border-color: #4e73df;
+            background-color: #f8f9ff;
+        }
+
+        .payment-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .card-number {
+            letter-spacing: 2px;
+        }
+
+        .secure-badge {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .price-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <img src="https://badrairlines.com/images/logo.png" alt="Badr Airlines Logo" height="50" class="logo">
+        
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Payment Method</h4>
+                        
+                        <!-- Credit/Debit Card -->
+                        <div class="payment-method selected" data-method="card">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-credit-card payment-icon"></i>
+                                <h5 class="mb-0">Credit/Debit Card</h5>
+                            </div>
+                            <form id="cardForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" class="form-control card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Expiry Date</label>
+                                        <input type="text" class="form-control" placeholder="MM/YY" maxlength="5">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">CVV</label>
+                                        <input type="password" class="form-control" placeholder="123" maxlength="3">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Card Holder Name</label>
+                                    <input type="text" class="form-control" placeholder="John Doe">
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- UPI -->
+                        <div class="payment-method" data-method="upi">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-phone payment-icon"></i>
+                                <h5 class="mb-0">UPI</h5>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">UPI ID</label>
+                                <input type="text" class="form-control" placeholder="username@upi">
+                            </div>
+                        </div>
+
+                        <!-- Digital Wallet -->
+                        <div class="payment-method" data-method="wallet">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-wallet2 payment-icon"></i>
+                                <h5 class="mb-0">Digital Wallet</h5>
+                            </div>
+                            <div class="mb-3">
+                                <select class="form-select">
+                                    <option value="">Select Wallet</option>
+                                    <option value="paypal">PayPal</option>
+                                    <option value="apple">Apple Pay</option>
+                                    <option value="google">Google Pay</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-4">
+                            <i class="bi bi-shield-lock me-2"></i>
+                            <span class="secure-badge">Secure Payment</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Price Summary</h4>
+                        <div class="selected-flight-details mb-4">
+                            <h5 class="card-title">Selected Flight</h5>
+                            <div id="selectedFlightDetails" class="p-4 bg-light rounded">
+                                <p class="text-muted mb-0">No flight selected</p>
+                            </div>
+                        </div>
+                        <div class="price-breakdown">
+                            <h5 class="card-title">Price Breakdown</h5>
+                            <div id="priceBreakdown" class="p-4 bg-light rounded">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="fs-6">Base Fare:</span>
+                                    <span id="baseFare" class="fs-6">$0</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="fs-6">Taxes & Fees:</span>
+                                    <span id="taxes" class="fs-6">$0</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="fs-6">Service Charge:</span>
+                                    <span id="serviceCharge" class="fs-6">$0</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong class="fs-5">Total:</strong>
+                                    <strong id="totalPrice" class="fs-5">$0</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100 mt-4 py-3 fs-5" onclick="processPayment()">
+                            Pay Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check if user is logged in
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'index.html';
+        }
+
+        // Format card number with spaces
+        document.querySelector('.card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = '';
+            for(let i = 0; i < value.length; i++) {
+                if(i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            e.target.value = formattedValue;
+        });
+
+        // Handle payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Process payment
+        async function processPayment() {
+            try {
+                const selectedMethod = document.querySelector('.payment-method.selected').dataset.method;
+                const flightDetails = JSON.parse(localStorage.getItem('selectedFlight'));
+                const bookingDetails = JSON.parse(localStorage.getItem('bookingDetails'));
+                
+                if (!flightDetails || !bookingDetails) {
+                    alert('Please select a flight first');
+                    return;
+                }
+
+                // First, create the booking
+                const booking = {
+                    from: bookingDetails.from,
+                    to: bookingDetails.to,
+                    date: new Date(bookingDetails.date).toISOString(),
+                    children: bookingDetails.children || 0,
+                    currency: 'USD',
+                    passengerName: bookingDetails.passengerName || 'Guest',
+                    flightNumber: flightDetails.route.split('→')[0].trim(),
+                    departureTime: flightDetails.departure,
+                    arrivalTime: flightDetails.arrival,
+                    duration: flightDetails.duration,
+                    baseFare: parseFloat(flightDetails.price.replace('$', '')),
+                    taxes: calculateTaxes(parseFloat(flightDetails.price.replace('$', ''))),
+                    serviceCharge: calculateServiceCharge(parseFloat(flightDetails.price.replace('$', ''))),
+                    totalPrice: flightDetails.totalPrice,
+                    class: 'Economy',
+                    status: 'Pending',
+                    bookingDate: new Date().toISOString(),
+                    email: bookingDetails.email || '',
+                    phone: bookingDetails.phone || ''
+                };
+
+                // Create booking
+                const bookingResponse = await fetch('/Booking/CreateBooking', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(booking)
+                });
+
+                const bookingResult = await bookingResponse.json();
+
+                if (!bookingResponse.ok) {
+                    throw new Error(bookingResult.error || bookingResult.errors?.join(', ') || 'Failed to create booking');
+                }
+
+                // Create payment object
+                const payment = {
+                    bookingId: bookingResult.bookingId,
+                    paymentMethod: selectedMethod,
+                    amount: flightDetails.totalPrice,
+                    currency: 'USD',
+                    paymentDate: new Date().toISOString(),
+                    status: 'Pending'
+                };
+
+                // Add payment method specific details
+                if (selectedMethod === 'card') {
+                    const cardNumber = document.querySelector('.card-number').value;
+                    const cardHolderName = document.querySelector('input[placeholder="John Doe"]').value;
+                    const expiryDate = document.querySelector('input[placeholder="MM/YY"]').value;
+
+                    if (!cardNumber || !cardHolderName || !expiryDate) {
+                        alert('Please fill in all card details');
+                        return;
+                    }
+
+                    payment.cardNumber = cardNumber;
+                    payment.cardHolderName = cardHolderName;
+                    payment.expiryDate = expiryDate;
+                } else if (selectedMethod === 'upi') {
+                    const upiId = document.querySelector('input[placeholder="username@upi"]').value;
+                    if (!upiId) {
+                        alert('Please enter UPI ID');
+                        return;
+                    }
+                    payment.upiId = upiId;
+                } else if (selectedMethod === 'wallet') {
+                    const walletType = document.querySelector('.form-select').value;
+                    if (!walletType) {
+                        alert('Please select a wallet type');
+                        return;
+                    }
+                    payment.walletType = walletType;
+                }
+
+                // Send payment data to server
+                const paymentResponse = await fetch('/Booking/ProcessPayment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payment)
+                });
+
+                const paymentResult = await paymentResponse.json();
+
+                if (!paymentResponse.ok) {
+                    throw new Error(paymentResult.error || 'Payment processing failed');
+                }
+                
+                // Show success message
+                alert('Payment processed successfully!');
+                
+                // Clear local storage
+                localStorage.removeItem('selectedFlight');
+                localStorage.removeItem('bookingDetails');
+                
+                // Redirect to success page
+                window.location.href = 'payment-success.html';
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Function to calculate taxes and fees (15% of base fare)
+        function calculateTaxes(basePrice) {
+            return Math.round(basePrice * 0.15);
+        }
+
+        // Function to calculate service charge (5% of base fare)
+        function calculateServiceCharge(basePrice) {
+            return Math.round(basePrice * 0.05);
+        }
+
+        // Function to update price summary
+        function updatePriceSummary() {
+            const flightDetails = JSON.parse(localStorage.getItem('selectedFlight'));
+            if (!flightDetails) return;
+
+            const basePrice = parseInt(flightDetails.price.replace('$', ''));
+            const taxes = calculateTaxes(basePrice);
+            const serviceCharge = calculateServiceCharge(basePrice);
+            const total = basePrice + taxes + serviceCharge;
+
+            // Update selected flight details
+            document.getElementById('selectedFlightDetails').innerHTML = `
+                <p class="mb-2"><strong>Route:</strong> ${flightDetails.route}</p>
+                <p class="mb-2"><strong>Date:</strong> ${flightDetails.date}</p>
+                <p class="mb-2"><strong>Time:</strong> ${flightDetails.departure} - ${flightDetails.arrival}</p>
+                <p class="mb-0"><strong>Duration:</strong> ${flightDetails.duration}</p>
+            `;
+
+            // Update price breakdown
+            document.getElementById('baseFare').textContent = `$${basePrice}`;
+            document.getElementById('taxes').textContent = `$${taxes}`;
+            document.getElementById('serviceCharge').textContent = `$${serviceCharge}`;
+            document.getElementById('totalPrice').textContent = `$${total}`;
+
+            // Store total price for payment processing
+            flightDetails.totalPrice = total;
+            localStorage.setItem('selectedFlight', JSON.stringify(flightDetails));
+        }
+
+        // Initialize price summary when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePriceSummary();
+        });
+    </script>
+</body>
+</html> 
