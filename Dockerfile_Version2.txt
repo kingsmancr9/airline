@@ -27,4 +27,7 @@ USER appuser
 COPY --from=build /app/publish .
 EXPOSE 80
 
-ENTRYPOINT ["dotnet", "YourAppAssemblyName.dll"]
+ENTRYPOINT ["dotnet", "airline1.dll"]
+
+
+
