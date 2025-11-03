@@ -1,0 +1,30 @@
+# Multi-stage Dockerfile for ASP.NET Core (recommended)
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy csproj(s) and restore as distinct layers for better caching
+COPY *.sln .
+# Adjust the path pattern if your projects are in a subfolder (e.g., src/)
+COPY **/*.csproj ./
+RUN dotnet restore --no-cache
+
+# Copy everything and build
+COPY . .
+RUN dotnet publish -c Release -o /app/publish --no-restore
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+ENV DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=false \
+    ASPNETCORE_URLS=http://+:80
+
+# Create non-root user (optional but recommended)
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+COPY --from=build /app/publish .
+EXPOSE 80
+
+ENTRYPOINT ["dotnet", "YourAppAssemblyName.dll"]
